@@ -1,6 +1,7 @@
 const Y = require('yjs');
 require('y-memory')(Y);
 require('y-webrtc')(Y);
+//require('y-websockets-client')(Y);
 require('y-array')(Y);
 require('y-map')(Y);
 require('y-text')(Y);
@@ -12,6 +13,7 @@ Y({
   },
   connector: {
     name: 'webrtc',
+    //name: 'websockets-client',
     room: 'rfmp',
   },
   share: {
