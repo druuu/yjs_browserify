@@ -1,10 +1,11 @@
-const Y = require('yjs2');
+require('regenerator').runtime();
+const Y = require('yjs');
 require('y-memory')(Y);
 require('y-webrtc3')(Y);
-require('y-array2')(Y);
-require('y-map2')(Y);
-require('y-text2')(Y);
-require('y-xml2')(Y);
+require('y-array')(Y);
+require('y-map')(Y);
+require('y-text')(Y);
+require('y-xml')(Y);
 
 Y({
   db: {
