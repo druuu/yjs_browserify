@@ -1,8 +1,6 @@
 const Y = require('yjs');
 require('y-memory')(Y);
 require('y-webrtc3')(Y);
-//require('y-webrtc2')(Y);
-//require('y-websockets-client')(Y);
 require('y-array')(Y);
 require('y-map')(Y);
 require('y-text')(Y);
