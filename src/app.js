@@ -1,6 +1,7 @@
 const Y = require('yjs');
 require('y-memory')(Y);
-require('y-webrtc')(Y);
+require('y-webrtc3')(Y);
+//require('y-webrtc2')(Y);
 //require('y-websockets-client')(Y);
 require('y-array')(Y);
 require('y-map')(Y);
@@ -14,7 +15,8 @@ Y({
   connector: {
     name: 'webrtc',
     //name: 'websockets-client',
-    room: 'rfmp',
+    room: 'room',
+    url: 'http://finwin.io:1256'
   },
   share: {
     codemirror: 'Text',

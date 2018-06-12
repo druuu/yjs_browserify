@@ -22,6 +22,9 @@
     "y-memory": "^8.0.9",
     "y-text": "^9.5.1",
     "y-webrtc": "^8.0.1",
+    "y-webrtc2": "^2.2.0",
+    "y-webrtc3": "^1.1.0",
+    "simplewebrtc": "^3.0.0",
     "y-websockets-client": "^8.0.16",
     "y-xml": "^10.0.0",
     "yjs": "^12.3.3"
