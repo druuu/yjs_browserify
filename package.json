@@ -14,14 +14,6 @@
     "browserify": "^14.5.0",
     "browserify-inspect-bundle": "0.0.2",
     "codemirror": "^5.38.0",
-    "http-server": "^0.10.0",
-    "y-array": "11.0.0-5",
-    "y-map": "11.0.0-1",
-    "y-memory": "9.0.0-1",
-    "y-text": "10.0.0-1",
-    "y-webrtc3": "^1.1.0",
-    "y-xml": "11.0.0-10",
-    "yjs": "13.0.0-61",
-    "regenerator": "^0.12.4"
+    "yjs": "^13.0.0-61"
   }
 }
