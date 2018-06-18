@@ -1,29 +1,80 @@
-let y = new Y('htmleditor', {
-  connector: {
-    name: 'webrtc',
-    room: 'dinesh',
-    url: 'http://finwin.io:1256'
-  }
+var Y = require('yjs');
+window.Y = Y;
+require('y-webrtc3')(Y);
+
+var Y2 = require('yjs2');
+window.Y2 = Y2;
+require('y-webrtc3')(Y2);
+
+let y = new Y('ynotebook', {
+    connector: {
+        name: 'webrtc',
+        room: 'dinesh',
+        url: 'http://finwin.io:1256'
+    }
 });
+window.y = y;
 
-new Y.DomBinding(y.define('xml', Y.XmlFragment), window.shared_elements['xml']);
-new Y.DomBinding(y.define('xml2', Y.XmlFragment), window.shared_elements['xml2']);
-new Y.DomBinding(y.define('xml3', Y.XmlFragment), window.shared_elements['xml3']);
-new Y.DomBinding(y.define('xml4', Y.XmlFragment), window.shared_elements['xml4']);
-new Y.DomBinding(y.define('xml5', Y.XmlFragment), window.shared_elements['xml5']);
-new Y.DomBinding(y.define('xml6', Y.XmlFragment), window.shared_elements['xml6']);
-new Y.DomBinding(y.define('xml7', Y.XmlFragment), window.shared_elements['xml7']);
-new Y.DomBinding(y.define('xml8', Y.XmlFragment), window.shared_elements['xml8']);
-new Y.DomBinding(y.define('xml9', Y.XmlFragment), window.shared_elements['xml9']);
-new Y.DomBinding(y.define('xml10', Y.XmlFragment), window.shared_elements['xml10']);
+let y2 = new Y2('ynotebook2', {
+    connector: {
+        name: 'webrtc',
+        room: 'dinesh2',
+        url: 'http://finwin.io:1257'
+    }
+});
+window.y2 = y2;
 
-new Y.CodeMirrorBinding(y.define('codemirror', Y.Text), window.shared_elements['codemirror']);
-new Y.CodeMirrorBinding(y.define('codemirror2', Y.Text), window.shared_elements['codemirror2']);
-new Y.CodeMirrorBinding(y.define('codemirror3', Y.Text), window.shared_elements['codemirror3']);
-new Y.CodeMirrorBinding(y.define('codemirror4', Y.Text), window.shared_elements['codemirror4']);
-new Y.CodeMirrorBinding(y.define('codemirror5', Y.Text), window.shared_elements['codemirror5']);
-new Y.CodeMirrorBinding(y.define('codemirror6', Y.Text), window.shared_elements['codemirror6']);
-new Y.CodeMirrorBinding(y.define('codemirror7', Y.Text), window.shared_elements['codemirror7']);
-new Y.CodeMirrorBinding(y.define('codemirror8', Y.Text), window.shared_elements['codemirror8']);
-new Y.CodeMirrorBinding(y.define('codemirror9', Y.Text), window.shared_elements['codemirror9']);
-new Y.CodeMirrorBinding(y.define('codemirror10', Y.Text), window.shared_elements['codemirror10']);
+function load_ynotebook(y) {
+    function load_ynotebook2(y) {
+        if (typeof Jupyter !== 'undefined') {
+            if (typeof Jupyter.notebook !== 'undefined') {
+                load_ynotebook3(y);
+            } else {
+                setTimeout(load_ynotebook2, 0, y);
+            }
+        } else {
+            setTimeout(load_ynotebook2, 0, y);
+        }
+    }
+
+    function load_ynotebook3(y) {
+        var ymap = y.define('ymap', Y.Map);
+        Jupyter.notebook.y = y;
+        Jupyter.notebook.ymap = ymap;
+        ymap.observe(function (e) {
+            console.log(e);
+            for (let index of e.keysChanged) {
+                let data = ymap.get(index);
+                var cell = Jupyter.notebook.insert_cell_at_index(data.cell_data.cell_type, index);
+                new Y.CodeMirrorBinding(y.define('ycodemirror'+data.id, Y.Text), cell.code_mirror);
+                if (y.connector.sockets === 0) {
+                    cell.fromJSON(data.cell_data);
+                }
+                if (data.cell_data.cell_type !== 'markdown') {
+                    new Y.DomBinding(y.define('yxml'+data.id, Y.XmlFragment), cell.output_area.element[0]);
+                }
+                console.log(index);
+            }
+        });
+
+        if (y.connector.sockets === 0) {
+            Jupyter.notebook.is_first = true;
+            Jupyter.notebook.load_notebook(Jupyter.notebook.notebook_path);
+        } else {
+            Jupyter.notebook.is_first = false;
+            Jupyter.notebook.load_notebook(Jupyter.notebook.notebook_path);
+        }
+    }
+
+    load_ynotebook2(y);
+}
+
+function load_ynotebook4(y) {
+    if (y.connector.sockets >= 0) {
+        load_ynotebook(y);
+    } else {
+        setTimeout(load_ynotebook4, 0, y);
+    }
+}
+
+//load_ynotebook4(y);
