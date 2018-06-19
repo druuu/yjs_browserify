@@ -2,10 +2,6 @@ var Y = require('yjs');
 window.Y = Y;
 require('y-webrtc3')(Y);
 
-var Y2 = require('yjs2');
-window.Y2 = Y2;
-require('y-webrtc3')(Y2);
-
 let y = new Y('ynotebook', {
     connector: {
         name: 'webrtc',
@@ -15,66 +11,74 @@ let y = new Y('ynotebook', {
 });
 window.y = y;
 
-let y2 = new Y2('ynotebook2', {
-    connector: {
-        name: 'webrtc',
-        room: 'dinesh2',
-        url: 'http://finwin.io:1257'
+for (var id in shared_elements) {
+    var codemirror = shared_elements[id]['codemirror'];
+    var output = shared_elements[id]['output'];
+    new Y.CodeMirrorBinding(y.define('codemirror'+id, Y.Text), codemirror);
+    new Y.DomBinding(y.define('xml'+id, Y.XmlFragment), output);
+}
+
+window.resolve_ymap = true;
+var ymap = y.define('ymap', Y.Map);
+ymap.observe(function (e) {
+    exec_ymap();
+    if (window.resolve_ymap) {
+        window.resolve_ymap = false;
+        exec_ymap();
     }
 });
-window.y2 = y2;
+window.ymap = ymap;
 
-function load_ynotebook(y) {
-    function load_ynotebook2(y) {
-        if (typeof Jupyter !== 'undefined') {
-            if (typeof Jupyter.notebook !== 'undefined') {
-                load_ynotebook3(y);
-            } else {
-                setTimeout(load_ynotebook2, 0, y);
-            }
-        } else {
-            setTimeout(load_ynotebook2, 0, y);
+function exec_ymap() {
+    if (typeof Jupyter !== 'undefined' && typeof Jupyter.notebook !== 'undefined') {
+        var keys = ymap.keys();
+        for (var index in keys) {
+            var id = keys[index];
+            set_cell(id, ymap.get(id)['index'], ymap.get(id)['active']);
         }
-    }
-
-    function load_ynotebook3(y) {
-        var ymap = y.define('ymap', Y.Map);
-        Jupyter.notebook.y = y;
-        Jupyter.notebook.ymap = ymap;
-        ymap.observe(function (e) {
-            console.log(e);
-            for (let index of e.keysChanged) {
-                let data = ymap.get(index);
-                var cell = Jupyter.notebook.insert_cell_at_index(data.cell_data.cell_type, index);
-                new Y.CodeMirrorBinding(y.define('ycodemirror'+data.id, Y.Text), cell.code_mirror);
-                if (y.connector.sockets === 0) {
-                    cell.fromJSON(data.cell_data);
-                }
-                if (data.cell_data.cell_type !== 'markdown') {
-                    new Y.DomBinding(y.define('yxml'+data.id, Y.XmlFragment), cell.output_area.element[0]);
-                }
-                console.log(index);
-            }
-        });
-
-        if (y.connector.sockets === 0) {
-            Jupyter.notebook.is_first = true;
-            Jupyter.notebook.load_notebook(Jupyter.notebook.notebook_path);
-        } else {
-            Jupyter.notebook.is_first = false;
-            Jupyter.notebook.load_notebook(Jupyter.notebook.notebook_path);
-        }
-    }
-
-    load_ynotebook2(y);
-}
-
-function load_ynotebook4(y) {
-    if (y.connector.sockets >= 0) {
-        load_ynotebook(y);
     } else {
-        setTimeout(load_ynotebook4, 0, y);
+        setTimeout(exec_ymap, 0);
     }
 }
 
-//load_ynotebook4(y);
+window.get_inactive_cell = function (type) {
+    var cells = Jupyter.notebook.get_cells();
+    for (var i=0; i<cells.length; i++) {
+        if (cells[i].cell_type === type && cells[i].metadata.active === false) {
+            return cells[i];
+        }
+    }
+}
+
+window.get_cell = function (id) {
+    var cells = Jupyter.notebook.get_cells();
+    for (var i=0; i<cells.length; i++) {
+        if (cells[i].metadata.id === id) {
+            return cells[i];
+        }
+    }
+}
+
+window.set_cell = function (id, index, active) {
+    function set_element(element, index) {
+        var to = $('#notebook-container');
+        if (index === 0) {
+            to.prepend(element);
+        } else {
+            to.children().eq(index-1).after(element);
+        }
+    }
+
+    var cell = get_cell(parseInt(id));
+    set_element(cell.element, index);
+    if (active) {
+        cell.metadata.active = true;
+        cell.element.removeClass('hidden');
+        cell.focus_cell();
+    } else {
+        cell.element.addClass('hidden');
+        cell.set_text('');
+        cell.output_area.clear_output();
+        cell.metadata.active = false;
+    }
+}

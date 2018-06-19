@@ -6,6 +6,8 @@
   "scripts": {
     "start": "http-server -c-1 -p 12344 public",
     "compile": "browserify src/app.js -o public/js/app.js -d",
+    "predefine": "browserify src/predefine.js -o predefine.js -d",
+    "postdefine": "browserify src/postdefine.js -o postdefine.js -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,7 +15,8 @@
   "dependencies": {
     "browserify": "^14.5.0",
     "browserify-inspect-bundle": "0.0.2",
-    "yjs": "^13.0.0-62",
-    "y-webrtc3": "^2.4.0"
+    "codemirror": "^5.38.0",
+    "y-webrtc3": "^2.4.0",
+    "yjs": "^13.0.0-62"
   }
 }
