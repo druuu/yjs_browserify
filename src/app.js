@@ -78,7 +78,9 @@ window.set_cell = function (id, index, active) {
     } else {
         cell.element.addClass('hidden');
         cell.set_text('');
-        cell.output_area.clear_output();
+        if (cell.cell_type === 'code') {
+            cell.output_area.clear_output();
+        }
         cell.metadata.active = false;
     }
 }
