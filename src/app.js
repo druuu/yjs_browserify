@@ -2,10 +2,11 @@ var Y = require('yjs');
 window.Y = Y;
 require('y-webrtc3')(Y);
 
-let y = new Y('ynotebook', {
+var notebook_name = document.getElementsByTagName('body')[0].getAttribute('data-notebook-name');
+let y = new Y(notebook_name, {
     connector: {
         name: 'webrtc',
-        room: 'dinesh',
+        room: notebook_name,
         url: 'http://finwin.io:1256'
     }
 });
