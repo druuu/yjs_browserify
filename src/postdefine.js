@@ -1,5 +1,5 @@
 function load_ynotebook() {
-    if (typeof window.sockets !== 'undefined') {
+    if (typeof window.sockets !== 'undefined' && typeof window.shared_elements_available !== 'undefined') {
         load_ynotebook2();
     } else {
         setTimeout(load_ynotebook, 0);
@@ -52,4 +52,3 @@ function load_ynotebook() {
 }
 
 load_ynotebook();
-

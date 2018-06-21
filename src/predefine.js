@@ -57,6 +57,8 @@ for (var i=0; i<total_cells; i++) {
     };
 }
 
+window.shared_elements_available = true;
+
 //for (var i=total_code_cells; i<total_code_cells+total_markdown_cells; i++) {
 //    var input_area = document.createElement('div');
 //    input_area.className = 'input_area';
