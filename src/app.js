@@ -2,12 +2,13 @@ var Y = require('yjs');
 window.Y = Y;
 require('y-webrtc3')(Y);
 
-var notebook_name = document.getElementsByTagName('body')[0].getAttribute('data-notebook-name');
-var y = new Y(notebook_name, {
+var url = new URL(window.location.href);
+var yid = url.searchParams.get("id");
+var y = new Y(yid, {
     connector: {
         name: 'webrtc',
-        room: notebook_name,
-        url: 'http://finwin.io:1256'
+        room: yid,
+        url: 'http://finplane.com:1256'
     }
 });
 window.y = y;
