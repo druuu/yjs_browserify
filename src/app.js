@@ -8,7 +8,7 @@ var y = new Y(yid, {
     connector: {
         name: 'webrtc',
         room: yid,
-        url: 'http://finplane.com:1256'
+        url: 'https://finplane.com:1256'
     }
 });
 window.y = y;
