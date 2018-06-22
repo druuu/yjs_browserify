@@ -16,7 +16,7 @@ function load_ynotebook() {
     function load_ynotebook3() {
         function load_ynotebook4(data) {
             var new_cells = data.content.cells;
-            ncells = new_cells.length;
+            var ncells = new_cells.length;
             for (var i=0; i<ncells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
                 cell.fromJSON(new_cells[i]);
@@ -28,7 +28,7 @@ function load_ynotebook() {
         }
         function load_ynotebook5(data) {
             var new_cells = data.content.cells;
-            ncells = new_cells.length;
+            var ncells = new_cells.length;
             for (var i=0; i<ncells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
                 cell.metadata = new_cells[i].metadata;
@@ -38,6 +38,24 @@ function load_ynotebook() {
                 }
             }
         }
+
+        //function convert_notebook(path) {
+        //    var ncells = content.cells.length;
+        //    for (var i=0; i<ncells; i++) {
+        //        content.cells[i].metadata['id'] = i;
+        //    }
+        //    for (var i=ncells; i<100; i++) {
+        //        if (i%2 === 0) {
+        //            var cell = {'cell_type': 'code', 'execution_count': '', 'metadata': {'id': i}, 'outputs': [], 'source': []}
+        //        } else {
+        //            var cell = {'cell_type': 'markdown', 'execution_count': '', 'metadata': {'id': i}, 'outputs': [], 'source': []}
+        //        }
+        //        content.cells.push(cell);
+        //    }
+        //    content.metadata['ynotebook'] = true;
+        //    console.log(content);
+        //    return content;
+        //}
 
         if (window.sockets === 0) {
             Jupyter.notebook.contents.get(Jupyter.notebook.notebook_path, {type: 'notebook'}).then(
