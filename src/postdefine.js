@@ -19,11 +19,10 @@ function load_ynotebook() {
             var ncells = new_cells.length;
             for (var i=0; i<ncells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
+                $.extend(cell.metadata, new_cells[i].metadata);
+                cell.metadata['active'] = true;
+                cell.element.removeClass('hidden');
                 cell.fromJSON(new_cells[i]);
-                if (cell.metadata.active) {
-                    cell.element.removeClass('hidden');
-                    cell.focus_cell();
-                }
             }
         }
         function load_ynotebook5(data) {
@@ -31,38 +30,20 @@ function load_ynotebook() {
             var ncells = new_cells.length;
             for (var i=0; i<ncells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
-                cell.metadata = new_cells[i].metadata;
-                if (new_cells[i].metadata.active) {
-                    cell.element.removeClass('hidden');
-                    cell.focus_cell();
-                }
+                $.extend(cell.metadata, new_cells[i].metadata);
+                cell.metadata['active'] = true;
+                cell.element.removeClass('hidden');
             }
         }
 
-        //function convert_notebook(path) {
-        //    var ncells = content.cells.length;
-        //    for (var i=0; i<ncells; i++) {
-        //        content.cells[i].metadata['id'] = i;
-        //    }
-        //    for (var i=ncells; i<100; i++) {
-        //        if (i%2 === 0) {
-        //            var cell = {'cell_type': 'code', 'execution_count': '', 'metadata': {'id': i}, 'outputs': [], 'source': []}
-        //        } else {
-        //            var cell = {'cell_type': 'markdown', 'execution_count': '', 'metadata': {'id': i}, 'outputs': [], 'source': []}
-        //        }
-        //        content.cells.push(cell);
-        //    }
-        //    content.metadata['ynotebook'] = true;
-        //    console.log(content);
-        //    return content;
-        //}
-
+        var url = new URL(window.location.href);
+        url = url.searchParams.get('url');
         if (window.sockets === 0) {
-            Jupyter.notebook.contents.get(Jupyter.notebook.notebook_path, {type: 'notebook'}).then(
+            Jupyter.notebook.contents.remote_get(Jupyter.notebook.notebook_path, {type: 'notebook', url: url}).then(
                 $.proxy(load_ynotebook4, this)
             );
         } else if (window.sockets > 0) {
-            Jupyter.notebook.contents.get(Jupyter.notebook.notebook_path, {type: 'notebook'}).then(
+            Jupyter.notebook.contents.remote_get(Jupyter.notebook.notebook_path, {type: 'notebook', url: url}).then(
                 $.proxy(load_ynotebook5, this)
             );
         }
