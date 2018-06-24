@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "http-server -c-1 -p 12344 public",
-    "compile": "browserify src/app.js -o public/js/app.js -d",
-    "predefine": "browserify src/predefine.js -o predefine.js -d",
-    "postdefine": "browserify src/postdefine.js -o postdefine.js -d",
+    "compile": "browserify src/ynotebook.js -o public/js/ynotebook.js -d",
+    "predefine": "browserify src/predefine.js -o public/js/predefine.js -d",
+    "postdefine": "browserify src/postdefine.js -o public/js/postdefine.js -d",
+    "all": "npm run compile && npm run predefine && npm run postdefine",
+    "update": "npm run all && cp public/js/* /opt/ynotebook/notebook/static/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
