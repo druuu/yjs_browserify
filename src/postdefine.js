@@ -17,22 +17,27 @@ function load_ynotebook() {
         function load_ynotebook4(data) {
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
-            for (var i=0; i<ncells; i++) {
+            for (var i=0; i<100; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
-                $.extend(cell.metadata, new_cells[i].metadata);
-                cell.metadata['active'] = true;
                 cell.element.removeClass('hidden');
-                cell.fromJSON(new_cells[i]);
+                if (new_cells[i]) {
+                    cell.fromJSON(new_cells[i]);
+                }
+                cell.metadata['active'] = true;
+                cell.metadata['id'] = i;
             }
         }
         function load_ynotebook5(data) {
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
-            for (var i=0; i<ncells; i++) {
+            for (var i=0; i<100; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
-                $.extend(cell.metadata, new_cells[i].metadata);
-                cell.metadata['active'] = true;
                 cell.element.removeClass('hidden');
+                if (new_cells[i]) {
+                    cell.fromJSON(new_cells[i]);
+                }
+                cell.metadata['active'] = true;
+                cell.metadata['id'] = i;
             }
         }
 
