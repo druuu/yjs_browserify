@@ -6,7 +6,12 @@ function load_ynotebook() {
     }
 
     function load_ynotebook2() {
-        if (typeof window.ymap !== 'undefined' && typeof window.Jupyter !== 'undefined' && typeof window.Jupyter.notebook !== 'undefined') {
+        if (
+            typeof window.ymap !== 'undefined'
+            && typeof window.Jupyter !== 'undefined'
+            && typeof window.Jupyter.notebook !== 'undefined'
+            && window.Jupyter.notebook.get_cells().length === 100
+            ) {
             load_ynotebook3();
         } else {
             setTimeout(load_ynotebook2, 0);
@@ -19,11 +24,17 @@ function load_ynotebook() {
             var ncells = new_cells.length;
             for (var i=0; i<100; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
-                cell.element.removeClass('hidden');
                 if (new_cells[i]) {
                     cell.fromJSON(new_cells[i]);
+                    if (new_cells[i].source === '' || new_cells[i].source === []) {
+                        cell.metadata['active'] = false;
+                    } else {
+                        cell.metadata['active'] = true;
+                        cell.element.removeClass('hidden');
+                    }
+                } else {
+                    cell.metadata['active'] = false;
                 }
-                cell.metadata['active'] = true;
                 cell.metadata['id'] = i;
             }
         }
@@ -32,11 +43,16 @@ function load_ynotebook() {
             var ncells = new_cells.length;
             for (var i=0; i<100; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
-                cell.element.removeClass('hidden');
                 if (new_cells[i]) {
-                    cell.fromJSON(new_cells[i]);
+                    if (new_cells[i].source === '' || new_cells[i].source === []) {
+                        cell.metadata['active'] = false;
+                    } else {
+                        cell.metadata['active'] = true;
+                        cell.element.removeClass('hidden');
+                    }
+                } else {
+                    cell.metadata['active'] = false;
                 }
-                cell.metadata['active'] = true;
                 cell.metadata['id'] = i;
             }
         }
