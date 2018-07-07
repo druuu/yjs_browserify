@@ -14,7 +14,7 @@ var y = new Y(yid, {
 window.y = y;
 
 function start_ybindings() {
-    if (typeof window.shared_elements_available !== 'undefined') {
+    if (typeof window.shared_elements_available !== 'undefined' && typeof window.metadata_loaded != 'undefined') {
         for (var id in shared_elements) {
             var codemirror = shared_elements[id]['codemirror'];
             var output = shared_elements[id]['output'];

@@ -1,4 +1,5 @@
 function load_ynotebook() {
+    var total_cells = 500;
     if (typeof window.sockets !== 'undefined' && typeof window.shared_elements_available !== 'undefined') {
         load_ynotebook2();
     } else {
@@ -10,7 +11,7 @@ function load_ynotebook() {
             typeof window.ymap !== 'undefined'
             && typeof window.Jupyter !== 'undefined'
             && typeof window.Jupyter.notebook !== 'undefined'
-            && window.Jupyter.notebook.get_cells().length === 100
+            && window.Jupyter.notebook.get_cells().length === total_cells
             ) {
             load_ynotebook3();
         } else {
@@ -22,7 +23,7 @@ function load_ynotebook() {
         function load_ynotebook4(data) {
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
-            for (var i=0; i<100; i++) {
+            for (var i=0; i<total_cells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
                 if (new_cells[i]) {
                     cell.fromJSON(new_cells[i]);
@@ -37,11 +38,13 @@ function load_ynotebook() {
                 }
                 cell.metadata['id'] = i;
             }
+            window.metadata_loaded = true;
         }
+
         function load_ynotebook5(data) {
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
-            for (var i=0; i<100; i++) {
+            for (var i=0; i<total_cells; i++) {
                 var cell = Jupyter.notebook.get_cell(i);
                 if (new_cells[i]) {
                     if (new_cells[i].source === '' || new_cells[i].source === []) {
@@ -55,6 +58,7 @@ function load_ynotebook() {
                 }
                 cell.metadata['id'] = i;
             }
+            window.metadata_loaded = true;
         }
 
         var url = new URL(window.location.href);

@@ -1,8 +1,6 @@
 CodeMirror = require('codemirror');
 
-var total_cells = 100;
-//var total_code_cells = 100;
-//var total_markdown_cells = 100;
+var total_cells = 500;
 var cm_config = {
     "indentUnit":4,
     "readOnly":false,
