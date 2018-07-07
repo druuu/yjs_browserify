@@ -19,46 +19,32 @@ function load_ynotebook() {
         }
     }
 
+    function get_inactive_cell(type) {
+        var cells = Jupyter.notebook.get_cells();
+        for (var i=0; i<cells.length; i++) {
+            if (
+                cells[i].element.find('.input_area').data('active') === 'no'
+                && cells[i].cell_type === type
+                ) {
+                return cells[i];
+            }
+        }
+    }
+
     function load_ynotebook3() {
         function load_ynotebook4(data) {
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
             for (var i=0; i<total_cells; i++) {
-                var cell = Jupyter.notebook.get_cell(i);
-                if (new_cells[i]) {
-                    cell.fromJSON(new_cells[i]);
-                    if (new_cells[i].source === '' || new_cells[i].source === []) {
-                        cell.metadata['active'] = false;
-                    } else {
-                        cell.metadata['active'] = true;
-                        cell.element.removeClass('hidden');
-                    }
-                } else {
-                    cell.metadata['active'] = false;
+                var new_cell = new_cells[i];
+                if (new_cell) {
+                    var cell = get_inactive_cell(new_cell.cell_type);
+                    cell.fromJSON(new_cell);
+                    var id = cell.element.find('.input_area').data('id');
+                    cell.element.find('.input_area').data('active', 'yes');
+                    ymap.set(id, {'index': id, 'active': 'yes'});
                 }
-                cell.metadata['id'] = i;
             }
-            window.metadata_loaded = true;
-        }
-
-        function load_ynotebook5(data) {
-            var new_cells = data.content.cells;
-            var ncells = new_cells.length;
-            for (var i=0; i<total_cells; i++) {
-                var cell = Jupyter.notebook.get_cell(i);
-                if (new_cells[i]) {
-                    if (new_cells[i].source === '' || new_cells[i].source === []) {
-                        cell.metadata['active'] = false;
-                    } else {
-                        cell.metadata['active'] = true;
-                        cell.element.removeClass('hidden');
-                    }
-                } else {
-                    cell.metadata['active'] = false;
-                }
-                cell.metadata['id'] = i;
-            }
-            window.metadata_loaded = true;
         }
 
         var url = new URL(window.location.href);
@@ -67,11 +53,7 @@ function load_ynotebook() {
             Jupyter.notebook.contents.remote_get(Jupyter.notebook.notebook_path, {type: 'notebook', url: url}).then(
                 $.proxy(load_ynotebook4, this)
             );
-        } else if (window.sockets > 0) {
-            Jupyter.notebook.contents.remote_get(Jupyter.notebook.notebook_path, {type: 'notebook', url: url}).then(
-                $.proxy(load_ynotebook5, this)
-            );
-        }
+        } 
     }
 }
 

@@ -14,7 +14,11 @@ var y = new Y(yid, {
 window.y = y;
 
 function start_ybindings() {
-    if (typeof window.shared_elements_available !== 'undefined' && typeof window.metadata_loaded != 'undefined') {
+    if (typeof window.shared_elements_available !== 'undefined'
+        && typeof Jupyter !== 'undefined'
+        && typeof Jupyter.notebook !== 'undefined'
+        && Jupyter.notebook._fully_loaded) {
+
         for (var id in shared_elements) {
             var codemirror = shared_elements[id]['codemirror'];
             var output = shared_elements[id]['output'];
@@ -45,10 +49,13 @@ function start_ybindings() {
             }
         }
         
-        window.get_inactive_cell = function (type) {
+        window.get_inactive_cell = function(type) {
             var cells = Jupyter.notebook.get_cells();
             for (var i=0; i<cells.length; i++) {
-                if (cells[i].cell_type === type && cells[i].metadata.active === false) {
+                if (
+                    cells[i].element.find('.input_area').data('active') === 'no'
+                    && cells[i].cell_type === type
+                    ) {
                     return cells[i];
                 }
             }
@@ -57,7 +64,7 @@ function start_ybindings() {
         window.get_cell = function (id) {
             var cells = Jupyter.notebook.get_cells();
             for (var i=0; i<cells.length; i++) {
-                if (cells[i].metadata.id === id) {
+                if (cells[i].element.find('.input_area').data('id') === id) {
                     return cells[i];
                 }
             }
@@ -74,9 +81,11 @@ function start_ybindings() {
             }
         
             var cell = get_cell(parseInt(id));
-            set_element(cell.element, index);
-            if (active) {
-                cell.metadata.active = true;
+            if (parseInt(id) !== parseInt(index)) {
+                set_element(cell.element, index);
+            }
+            if (active === 'yes') {
+                cell.element.find('.input_area').data('active', 'yes');
                 cell.element.removeClass('hidden');
                 cell.focus_cell();
             } else {
@@ -85,7 +94,7 @@ function start_ybindings() {
                 if (cell.cell_type === 'code') {
                     cell.output_area.clear_output();
                 }
-                cell.metadata.active = false;
+                cell.element.find('.input_area').data('active', 'no');
             }
         }
     } else {

@@ -45,6 +45,8 @@ window.shared_elements = {};
 for (var i=0; i<total_cells; i++) {
     var output = document.createElement('div');
     var input_area = document.createElement('div');
+    input_area.setAttribute('data-id', i);
+    input_area.setAttribute('data-active', 'no');
     input_area.className = 'input_area';
     //var codemirror = CodeMirror(input_area, cm_config); 
     var codemirror = CodeMirror(input_area); 
@@ -56,13 +58,3 @@ for (var i=0; i<total_cells; i++) {
 }
 
 window.shared_elements_available = true;
-
-//for (var i=total_code_cells; i<total_code_cells+total_markdown_cells; i++) {
-//    var input_area = document.createElement('div');
-//    input_area.className = 'input_area';
-//    var codemirror = CodeMirror(input_area, cm_config2); 
-//    window.shared_elements[i] = {
-//        'input_area': input_area,
-//        'codemirror': codemirror
-//    };
-//}
