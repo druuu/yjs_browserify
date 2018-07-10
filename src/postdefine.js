@@ -1,5 +1,6 @@
 function load_ynotebook() {
-    var total_cells = 500;
+    var url = new URL(window.location.href);
+    var total_cells = url.searchParams.get('total_cells') || 150;
     if (typeof window.sockets !== 'undefined' && typeof window.shared_elements_available !== 'undefined') {
         load_ynotebook2();
     } else {

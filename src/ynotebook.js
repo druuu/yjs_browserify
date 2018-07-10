@@ -26,29 +26,6 @@ function start_ybindings() {
             new Y.DomBinding(y.define('xml'+id, Y.XmlFragment), output);
         }
         
-        window.resolve_ymap = true;
-        var ymap = y.define('ymap', Y.Map);
-        ymap.observe(function (e) {
-            exec_ymap();
-            if (window.resolve_ymap) {
-                window.resolve_ymap = false;
-                exec_ymap();
-            }
-        });
-        window.ymap = ymap;
-        
-        function exec_ymap() {
-            if (typeof Jupyter !== 'undefined' && typeof Jupyter.notebook !== 'undefined') {
-                var keys = ymap.keys();
-                for (var index in keys) {
-                    var id = keys[index];
-                    set_cell(id, ymap.get(id)['index'], ymap.get(id)['active']);
-                }
-            } else {
-                setTimeout(exec_ymap, 0);
-            }
-        }
-        
         window.get_inactive_cell = function(type) {
             var cells = Jupyter.notebook.get_cells();
             for (var i=0; i<cells.length; i++) {
@@ -95,6 +72,36 @@ function start_ybindings() {
                     cell.output_area.clear_output();
                 }
                 cell.element.find('.input_area').data('active', 'no');
+            }
+
+            if (cell.cell_type === 'markdown') {
+                cell.unrender();
+                cell.render();
+            }
+        }
+
+        window.resolve_ymap = true;
+        var ymap = y.define('ymap', Y.Map);
+        ymap.observe(function (e) {
+            for (let key of e.keysChanged) {
+                set_cell(key, ymap.get(key)['index'], ymap.get(key)['active']);
+            }
+        });
+        if (window.resolve_ymap) {
+            window.resolve_ymap = false;
+            exec_ymap();
+        }
+        window.ymap = ymap;
+        
+        function exec_ymap() {
+            if (typeof Jupyter !== 'undefined' && typeof Jupyter.notebook !== 'undefined') {
+                var keys = ymap.keys();
+                for (var index in keys) {
+                    var id = keys[index];
+                    set_cell(id, ymap.get(id)['index'], ymap.get(id)['active']);
+                }
+            } else {
+                setTimeout(exec_ymap, 0);
             }
         }
     } else {
