@@ -19,6 +19,6 @@
     "browserify-inspect-bundle": "0.0.2",
     "codemirror": "^5.38.0",
     "y-webrtc3": "^2.4.0",
-    "yjs": "^13.0.0-62"
+    "yjs": "^13.0.0-66"
   }
 }

@@ -48,10 +48,8 @@ function load_ynotebook() {
             }
         }
 
-        var url = new URL(window.location.href);
-        url = url.searchParams.get('url');
         if (window.sockets === 0) {
-            Jupyter.notebook.contents.remote_get(Jupyter.notebook.notebook_path, {type: 'notebook', url: url}).then(
+            Jupyter.notebook.contents.get(Jupyter.notebook.notebook_path, {type: 'notebook'}).then(
                 $.proxy(load_ynotebook4, this)
             );
         } 

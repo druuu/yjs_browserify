@@ -2,13 +2,12 @@ var Y = require('yjs');
 window.Y = Y;
 require('y-webrtc3')(Y);
 
-var url = new URL(window.location.href);
-var yid = url.searchParams.get("id");
+var yid = window.location.pathname.replace(/\//g, '__');
 var y = new Y(yid, {
     connector: {
         name: 'webrtc',
         room: yid,
-        url: 'http://finplane.com:1256'
+        url: 'https://finwin.io:1256'
     }
 });
 window.y = y;
@@ -21,8 +20,9 @@ function start_ybindings() {
 
         for (var id in shared_elements) {
             var codemirror = shared_elements[id]['codemirror'];
-            var output = shared_elements[id]['output'];
             new Y.CodeMirrorBinding(y.define('codemirror'+id, Y.Text), codemirror);
+
+            var output = shared_elements[id]['output'];
             new Y.DomBinding(y.define('xml'+id, Y.XmlFragment), output);
         }
         
