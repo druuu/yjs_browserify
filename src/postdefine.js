@@ -43,7 +43,7 @@ function load_ynotebook() {
                     cell.fromJSON(new_cell);
                     var id = cell.element.find('.input_area').data('id');
                     cell.element.find('.input_area').data('active', 'yes');
-                    ymap.set(id, {'index': id, 'active': 'yes'});
+                    ymap.set(id, {'index': i, 'active': 'yes'});
                 }
             }
         }
