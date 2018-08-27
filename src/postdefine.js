@@ -49,10 +49,13 @@ function load_ynotebook() {
         }
 
         if (window.sockets === 0) {
+            $('#nbload_status').text('Downloading Notebook');
             Jupyter.notebook.contents.get(Jupyter.notebook.notebook_path, {type: 'notebook'}).then(
                 $.proxy(load_ynotebook4, this)
             );
-        } 
+        } else {
+            $('#nbload_status').text('Syncing Notebook');
+        }
     }
 }
 
