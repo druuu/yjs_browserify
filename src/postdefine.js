@@ -57,6 +57,9 @@ function load_ynotebook() {
             );
         } else {
             $('#nbload_status').text('Syncing Notebook');
+            setTimeout(function () {
+                $('#nbload').hide();
+            }, 3000);
         }
     }
 }
