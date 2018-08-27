@@ -34,6 +34,7 @@ function load_ynotebook() {
 
     function load_ynotebook3() {
         function load_ynotebook4(data) {
+            $('#nbload_status').text('Loading Notebook');
             var new_cells = data.content.cells;
             var ncells = new_cells.length;
             for (var i=0; i<total_cells; i++) {
@@ -46,6 +47,7 @@ function load_ynotebook() {
                     ymap.set(id, {'index': i, 'active': 'yes'});
                 }
             }
+            $('#nbload').hide();
         }
 
         if (window.sockets === 0) {
